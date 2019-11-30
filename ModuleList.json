@@ -1,1 +1,10 @@
-{}
+{
+  "Modules": [
+    {
+      "Name": "Theme Module",
+      "Description": "List of community themes.",
+      "Author": "KenCorma",
+      "Repo": "Nexus-Wallet-Themes"
+    }
+  ]
+}
