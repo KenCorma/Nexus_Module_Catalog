@@ -2,13 +2,17 @@ import {
   showConnections,
   hideConnections,
   updateInput,
-} from 'actions/actionCreators';
+  setAvailableModules
+} from "actions/actionCreators";
+
+import ModuleEntry from "./ModuleEntry";
+import Popup from "./Popup";
 
 const {
   libraries: {
     React,
     ReactRedux: { connect },
-    emotion: { styled },
+    emotion: { styled }
   },
   components: { GlobalStyles, Panel, Switch, Tooltip, TextField, Button },
   utilities: {
@@ -17,11 +21,15 @@ const {
     onceRpcReturn,
     showErrorDialog,
     showSuccessDialog,
-  },
+    proxyRequest
+  }
 } = NEXUS;
 
-const DemoTextField = styled(TextField)({
-  maxWidth: 400,
+const ThemeList = styled.div({
+  padding: "0.5rem 1rem 0rem 1rem",
+  flexGrow: 1,
+  flexBasis: "35em",
+  overflow: "auto"
 });
 
 @connect(
@@ -29,86 +37,60 @@ const DemoTextField = styled(TextField)({
     coreInfo: state.coreInfo,
     showingConnections: state.settings.showingConnections,
     inputValue: state.ui.inputValue,
+    availableModules: state.modules.availableModules
   }),
-  { showConnections, hideConnections, updateInput }
+  { showConnections, hideConnections, updateInput, setAvailableModules }
 )
 class Main extends React.Component {
-  confirmToggle = async () => {
-    const { showingConnections, showConnections, hideConnections } = this.props;
-    const question = showingConnections
-      ? 'Hide number of connections?'
-      : 'Show number of connections?';
-
-    const agreed = await confirm({ question });
-    if (agreed) {
-      if (showingConnections) {
-        hideConnections();
-      } else {
-        showConnections();
-      }
-    }
-  };
+  componentDidMount() {
+    this.test();
+  }
 
   handleChange = e => {
     this.props.updateInput(e.target.value);
   };
 
-  getDifficulty = async () => {
+  async test() {
     try {
-      const response = await rpcCall('getdifficulty', [[]]);
-      showSuccessDialog({
-        message: 'Mining difficulty',
-        note: JSON.stringify(response, null, 2),
-      });
-    } catch (err) {
-      showErrorDialog({
-        message: 'Cannot get difficulty',
-      });
+      const result = await proxyRequest(
+        "https://api.github.com/repos/KenCorma/Nexus_Module_Catalog/contents/ModuleList.json",
+        { responseType: "json" }
+      );
+      console.error(result);
+
+      const aaaaa = JSON.parse(atob(result.data.content));
+      console.log(aaaaa.Modules);
+      //console.log(asdgh);
+      this.props.setAvailableModules(aaaaa.Modules);
+    } catch (e) {
+      console.error(e);
     }
-  };
+  }
+
+  returnButtons() {
+    //return;
+    const buttons = this.props.availableModules.map(Element => {
+      return <ModuleEntry data={Element} />;
+    });
+    console.log(buttons);
+    return <ThemeList>{buttons}</ThemeList>;
+  }
 
   render() {
-    const { coreInfo, showingConnections, inputValue } = this.props;
+    const {
+      coreInfo,
+      showingConnections,
+      inputValue,
+      availableModules
+    } = this.props;
+    console.log(availableModules);
     return (
-      <Panel
-        title="React Module Example"
-        icon={{ url: 'react.svg', id: 'icon' }}
-      >
+      <Panel title="Wallet Theme List" icon={{ url: "react.svg", id: "icon" }}>
         <GlobalStyles />
-        <div>
-          This showcases how a Nexus Wallet Modules can interact with the base
-          wallet.
-        </div>
-
-        <div className="mt2 flex center">
-          Show number of connections&nbsp;&nbsp;
-          <Tooltip.Trigger
-            position="right"
-            tooltip="This setting will be remembered even when the wallet is restarted"
-          >
-            <Switch
-              checked={showingConnections}
-              onChange={this.confirmToggle}
-            />
-          </Tooltip.Trigger>
-        </div>
-        {!!showingConnections && <div>Connections: {coreInfo.connections}</div>}
-
-        <div className="mt2">
-          <div>
-            This textbox's content will be remembered even when you navigate
-            away from this module
-          </div>
-          <DemoTextField
-            value={inputValue}
-            onChange={this.handleChange}
-            placeholder="Type anything here"
-          />
-        </div>
-
-        <div className="mt2">
-          <Button onClick={this.getDifficulty}>View mining difficulty</Button>
-        </div>
+        {this.props.openPreview ? (
+          <Popup incomingTheme={this.props.selectedTheme} />
+        ) : null}
+        {this.returnButtons()}
       </Panel>
     );
   }
