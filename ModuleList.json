@@ -5,6 +5,12 @@
       "Description": "List of community themes.",
       "Author": "KenCorma",
       "Repo": "Nexus-Wallet-Themes"
+    },
+    {
+      "Name": "Nexus Snake Game",
+      "Description": "The Game of Snake",
+      "Author": "ksz2k",
+      "Repo": "NexusSnake"
     }
   ]
 }

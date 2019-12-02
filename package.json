@@ -1,7 +1,7 @@
 {
-  "name": "react_module_example",
+  "name": "nexus_module_catalog",
   "version": "0.1.0",
-  "description": "This is an example of how a Nexus Module can be built with React",
+  "description": "List of opensource modules for the Nexus Wallet",
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@babel/plugin-proposal-class-properties": "^7.3.4",
@@ -27,6 +27,8 @@
     "build": "cross-env NODE_ENV=production node -r @babel/register ./node_modules/webpack/bin/webpack --config webpack.config.js"
   },
   "dependencies": {
-    "file-saver": "^2.0.2"
+    "core-js": "^2.6.10",
+    "file-saver": "^2.0.2",
+    "set-value": "^2.0.1"
   }
 }
