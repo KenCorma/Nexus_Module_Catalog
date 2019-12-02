@@ -15,7 +15,8 @@ const ThemeButtonContainer = styled.div(({ theme }) => ({
   border: `1px solid ${color.lighten(theme.background, 0.1)}`,
   borderRadius: "2.5px",
   display: "grid",
-  transition: `background ${1}`
+  transition: `background ${1}`,
+  margin: "0em 0em .5em 0em"
 }));
 
 const ContainerTitle = styled.div(({ theme }) => ({
@@ -35,8 +36,9 @@ const ContainerTop = styled.div(({ theme }) => ({
 const ContainerBottom = styled.div(({ theme }) => ({
   margin: "1em",
   display: "grid",
-  gridTemplateColumns: "auto",
-  gridTemplateRows: "auto auto auto"
+  gridTemplateColumns: "auto auto auto",
+  gridTemplateRows: "auto",
+  gridGap: "0px .25em"
 }));
 
 const Line = styled.div(({ theme }) => ({
@@ -55,7 +57,6 @@ class ModuleEntry extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      themeJson: {},
       downloads: [],
       moduleVersion: ""
     };
@@ -72,12 +73,9 @@ class ModuleEntry extends React.Component {
         `https://api.github.com/repos/${Author}/${Repo}/releases/latest`,
         { responseType: "json" }
       );
-      console.error(result);
       const downloadUrls = result.data.assets.map(element => {
         return element.browser_download_url;
       });
-
-      console.log(downloadUrls);
       this.setState({
         downloads: downloadUrls,
         moduleVersion: result.data.tag_name
@@ -101,7 +99,7 @@ class ModuleEntry extends React.Component {
       const assetName = urlSplit[urlSplit.length - 1];
       return (
         <Button
-          style={{ width: "33%" }}
+          style={{ width: "100%" }}
           onClick={() => this.clickSaveFile(element, assetName)}
         >
           {assetName}
@@ -120,7 +118,6 @@ class ModuleEntry extends React.Component {
         <ContainerTop>
           <div>
             {`Description: ${Description}`}
-
             <br />
             {`Author: ${Author}`}
           </div>

@@ -6,7 +6,6 @@ import {
 } from "actions/actionCreators";
 
 import ModuleEntry from "./ModuleEntry";
-import Popup from "./Popup";
 
 const {
   libraries: {
@@ -25,7 +24,7 @@ const {
   }
 } = NEXUS;
 
-const ThemeList = styled.div({
+const ModuleList = styled.div({
   padding: "0.5rem 1rem 0rem 1rem",
   flexGrow: 1,
   flexBasis: "35em",
@@ -43,37 +42,31 @@ const ThemeList = styled.div({
 )
 class Main extends React.Component {
   componentDidMount() {
-    this.test();
+    this.getModuleList();
   }
 
   handleChange = e => {
     this.props.updateInput(e.target.value);
   };
 
-  async test() {
+  async getModuleList() {
     try {
       const result = await proxyRequest(
         "https://api.github.com/repos/KenCorma/Nexus_Module_Catalog/contents/ModuleList.json",
         { responseType: "json" }
       );
-      console.error(result);
-
-      const aaaaa = JSON.parse(atob(result.data.content));
-      console.log(aaaaa.Modules);
-      //console.log(asdgh);
-      this.props.setAvailableModules(aaaaa.Modules);
+      const resultData = JSON.parse(atob(result.data.content));
+      this.props.setAvailableModules(resultData.Modules);
     } catch (e) {
       console.error(e);
     }
   }
 
   returnButtons() {
-    //return;
-    const buttons = this.props.availableModules.map(Element => {
+    const modules = this.props.availableModules.map(Element => {
       return <ModuleEntry data={Element} />;
     });
-    console.log(buttons);
-    return <ThemeList>{buttons}</ThemeList>;
+    return <ModuleList>{modules}</ModuleList>;
   }
 
   render() {
@@ -83,13 +76,9 @@ class Main extends React.Component {
       inputValue,
       availableModules
     } = this.props;
-    console.log(availableModules);
     return (
-      <Panel title="Wallet Theme List" icon={{ url: "react.svg", id: "icon" }}>
+      <Panel title="Wallet Theme List" icon={{ url: "logo.svg", id: "icon" }}>
         <GlobalStyles />
-        {this.props.openPreview ? (
-          <Popup incomingTheme={this.props.selectedTheme} />
-        ) : null}
         {this.returnButtons()}
       </Panel>
     );
