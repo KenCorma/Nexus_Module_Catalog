@@ -1,5 +1,4 @@
-import FileSaver from "file-saver";
-import { toggleThemePreview, setSelectedTheme } from "actions/actionCreators";
+import FileSaver from "../deps/FileSaver";
 
 const {
   libraries: {
@@ -12,75 +11,127 @@ const {
 } = NEXUS;
 
 const ThemeButtonContainer = styled.div(({ theme }) => ({
-  background: color.lighten(theme.background, 0.4),
-  border: `1px solid ${theme.primary}`,
+  background: color.darken(theme.background, 0.2),
+  border: `1px solid ${color.lighten(theme.background, 0.1)}`,
   borderRadius: "2.5px",
-  height: "6em",
-  margin: "1em",
   display: "grid",
-  gridTemplateColumns: "auto auto",
-  gridTemplateRows: "auto",
-  transition: `background ${1}`,
-  "&:hover": {
-    background: color.darken(theme.background, 0.2)
-  }
+  transition: `background ${1}`
 }));
 
-const PreviewImage = styled.img({
-  height: "50px",
-  width: "50px"
-});
+const ContainerTitle = styled.div(({ theme }) => ({
+  width: "100%",
+  textAlign: "Center",
+  color: theme.primary,
+  background: color.lighten(theme.background, 0.1)
+}));
+
+const ContainerTop = styled.div(({ theme }) => ({
+  margin: ".25em 1em .25em 1em",
+  display: "grid",
+  gridTemplateColumns: "auto auto",
+  gridTemplateRows: "auto"
+}));
+
+const ContainerBottom = styled.div(({ theme }) => ({
+  margin: "1em",
+  display: "grid",
+  gridTemplateColumns: "auto",
+  gridTemplateRows: "auto auto auto"
+}));
+
+const Line = styled.div(({ theme }) => ({
+  background: theme.primary,
+  width: "100%",
+  height: "2px"
+}));
 
 @connect(
   state => ({
     general: state.general
   }),
-  { toggleThemePreview, setSelectedTheme }
+  {}
 )
 class ModuleEntry extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      themeJson: {}
+      themeJson: {},
+      downloads: [],
+      moduleVersion: ""
     };
   }
-  clickSaveFile() {
-    FileSaver.saveAs(this.props.data.url, "theme.json");
+
+  componentDidMount() {
+    this.getDownloads();
   }
 
-  async clickPressPreview() {
+  async getDownloads() {
     try {
-      const result = await proxyRequest(this.props.data.url, {
-        responseType: "json"
+      const { Name, Author, Description, Repo } = this.props.data;
+      const result = await proxyRequest(
+        `https://api.github.com/repos/${Author}/${Repo}/releases/latest`,
+        { responseType: "json" }
+      );
+      console.error(result);
+      const downloadUrls = result.data.assets.map(element => {
+        return element.browser_download_url;
       });
-      console.log(result);
+
+      console.log(downloadUrls);
       this.setState({
-        themeJson: result.data
+        downloads: downloadUrls,
+        moduleVersion: result.data.tag_name
       });
-      this.props.setSelectedTheme(result.data);
-      this.props.toggleThemePreview(true);
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async clickSaveFile(url, assetName) {
+    try {
+      FileSaver.saveAs(url, assetName);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  returnDownloadButtons() {
+    return this.state.downloads.map(element => {
+      const urlSplit = element.split("/");
+      const assetName = urlSplit[urlSplit.length - 1];
+      return (
+        <Button
+          style={{ width: "33%" }}
+          onClick={() => this.clickSaveFile(element, assetName)}
+        >
+          {assetName}
+        </Button>
+      );
+    });
   }
 
   render() {
     const { Name, Author, Description, Repo } = this.props.data;
+    const { moduleVersion } = this.state;
 
     return (
       <ThemeButtonContainer>
-        {`Name: ${Name} Author: ${Author}`}
-        <br />
-        {`Description: ${Description}`}
-        <br />
-        {`Repo: ${Repo}`}
-        <Button
-          style={{ width: "6em" }}
-          onClick={() => this.clickPressPreview()}
-        >
-          {"Preview"}
-        </Button>
-        <Button style={{ width: "6em" }} onClick={() => this.clickSaveFile()}>
-          {"Download"}
-        </Button>
+        <ContainerTitle>{Name}</ContainerTitle>
+        <ContainerTop>
+          <div>
+            {`Description: ${Description}`}
+
+            <br />
+            {`Author: ${Author}`}
+          </div>
+          <div style={{ textAlign: "right" }}>
+            {`Version: ${moduleVersion}`}
+            <br />
+            {`Repo: ${Repo}`}
+          </div>
+        </ContainerTop>
+        <Line />
+        <ContainerBottom>{this.returnDownloadButtons()}</ContainerBottom>
       </ThemeButtonContainer>
     );
   }
