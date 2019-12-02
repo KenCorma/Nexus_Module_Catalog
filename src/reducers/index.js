@@ -1,8 +1,6 @@
 import initialized from "./initialized";
 import theme from "./theme";
 import coreInfo from "./coreInfo";
-import settings from "./settings";
-import ui from "./ui";
 import modules from "./modules";
 
 const {
@@ -16,8 +14,6 @@ export default function createReducer() {
     initialized,
     theme,
     coreInfo,
-    settings,
-    ui,
     modules
   });
 }

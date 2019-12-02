@@ -1,10 +1,10 @@
-import configureStore from './configureStore';
-import App from './App';
+import configureStore from "./configureStore";
+import App from "./App";
 import {
   initialize,
   updateCoreInfo,
-  updateTheme,
-} from './actions/actionCreators';
+  updateTheme
+} from "./actions/actionCreators";
 
 const store = configureStore();
 
@@ -12,9 +12,9 @@ const {
   libraries: {
     React,
     ReactDOM,
-    ReactRedux: { Provider },
+    ReactRedux: { Provider }
   },
-  utilities: { onceInitialize, onCoreInfoUpdated, onThemeUpdated },
+  utilities: { onceInitialize, onCoreInfoUpdated, onThemeUpdated }
 } = NEXUS;
 
 onceInitialize(data => {
@@ -33,5 +33,5 @@ ReactDOM.render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.getElementById('root')
+  document.getElementById("root")
 );

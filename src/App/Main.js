@@ -1,9 +1,4 @@
-import {
-  showConnections,
-  hideConnections,
-  updateInput,
-  setAvailableModules
-} from "actions/actionCreators";
+import { setAvailableModules } from "actions/actionCreators";
 
 import ModuleEntry from "./ModuleEntry";
 
@@ -34,20 +29,14 @@ const ModuleList = styled.div({
 @connect(
   state => ({
     coreInfo: state.coreInfo,
-    showingConnections: state.settings.showingConnections,
-    inputValue: state.ui.inputValue,
     availableModules: state.modules.availableModules
   }),
-  { showConnections, hideConnections, updateInput, setAvailableModules }
+  { setAvailableModules }
 )
 class Main extends React.Component {
   componentDidMount() {
     this.getModuleList();
   }
-
-  handleChange = e => {
-    this.props.updateInput(e.target.value);
-  };
 
   async getModuleList() {
     try {
@@ -70,12 +59,7 @@ class Main extends React.Component {
   }
 
   render() {
-    const {
-      coreInfo,
-      showingConnections,
-      inputValue,
-      availableModules
-    } = this.props;
+    const { coreInfo, availableModules } = this.props;
     return (
       <Panel title="Wallet Theme List" icon={{ url: "logo.svg", id: "icon" }}>
         <GlobalStyles />
