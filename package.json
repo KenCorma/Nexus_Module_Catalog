@@ -1,6 +1,6 @@
 {
   "name": "nexus_module_catalog",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "List of opensource modules for the Nexus Wallet",
   "devDependencies": {
     "@babel/core": "^7.3.4",
