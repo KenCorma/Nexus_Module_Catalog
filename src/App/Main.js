@@ -61,7 +61,7 @@ class Main extends React.Component {
   render() {
     const { coreInfo, availableModules } = this.props;
     return (
-      <Panel title="Wallet Theme List" icon={{ url: "logo.svg", id: "icon" }}>
+      <Panel title="Wallet Module List" icon={{ url: "logo.svg", id: "icon" }}>
         <GlobalStyles />
         {this.returnButtons()}
       </Panel>
