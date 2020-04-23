@@ -1,6 +1,12 @@
 {
   "Modules": [
     {
+      "Name": "Invoices",
+      "Description": "For use with the Tritium Invoice System",
+      "Author": "Nexusoft",
+      "Repo": "Nexus-Interface-Invoice-Module"
+    },
+    {
       "Name": "Theme Module",
       "Description": "List of community themes.",
       "Author": "KenCorma",
@@ -11,6 +17,12 @@
       "Description": "The Game of Snake",
       "Author": "ksz2k",
       "Repo": "NexusSnake"
+    },
+    {
+      "Name": "React Redux Module Example",
+      "Description": "Example Project used to make modules ",
+      "Author": "Nexusoft",
+      "Repo": "react_redux_module_example"
     }
   ]
 }
