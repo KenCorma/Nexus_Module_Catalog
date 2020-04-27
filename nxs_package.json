@@ -1,7 +1,7 @@
 {
   "name": "nexus_module_catalog",
   "displayName": "Nexus Module Catalog",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "targetWalletVersion": "3.0.0",
   "description": "List of opensource modules for the Nexus Wallet",
   "type": "app",

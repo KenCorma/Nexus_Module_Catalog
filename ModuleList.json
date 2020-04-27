@@ -19,6 +19,12 @@
       "Repo": "NexusSnake"
     },
     {
+      "Name": "History Module",
+      "Description": "Allows for reviewing and saving transaction history",
+      "Author": "KenCorma",
+      "Repo": "nexus-interface-history-module"
+    },
+    {
       "Name": "React Redux Module Example",
       "Description": "Example Project used to make modules ",
       "Author": "Nexusoft",
