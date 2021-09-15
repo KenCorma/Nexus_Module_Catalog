@@ -29,6 +29,6 @@
   "dependencies": {
     "core-js": "^2.6.10",
     "file-saver": "^2.0.2",
-    "set-value": "^2.0.1"
+    "set-value": "^4.0.1"
   }
 }
